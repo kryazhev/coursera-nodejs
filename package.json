@@ -1,0 +1,18 @@
+{
+  "name": "nodejs",
+  "version": "1.0.0",
+  "description": "Coursera NodeJS Course",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "vassilliy.kryazhev@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "assert": "^1.5.0",
+    "express": "^4.16.4",
+    "mongodb": "^3.2.4",
+    "morgan": "^1.9.1"
+  }
+}
