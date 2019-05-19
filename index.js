@@ -2,6 +2,8 @@ const http = require("http");
 const express = require("express");
 const morgan = require("morgan");
 
+const mongo = require("./data/mongo-utils")
+const mongooose = require("./data/mongooose-utils")
 const router = require("./router");
 
 const host = "localhost";
@@ -12,9 +14,11 @@ const app = express();
 app.use(morgan("dev"));
 app.use(express.json());
 
-app.use("/dishes", router.create("dishes"));
-app.use("/leaders", router.create("leaders"));
-app.use("/promotions", router.create("promotions"));
+app.use("/v1/dishes", router.create("dishes", mongo));
+app.use("/v1/leaders", router.create("leaders", mongo));
+app.use("/v1/promotions", router.create("promotions", mongo));
+
+app.use("/v2/dishes", router.create("dishes", mongooose));
 
 app.use(express.static(__dirname + "/public"));
 
@@ -22,6 +26,12 @@ app.use((req, resp, next) => {
     resp.statusCode = 200;
     resp.setHeader("Content-Type", "text/html");
     resp.end("<html><body>Hello from Express</body></html>");
+});
+
+app.use(function(error, req, resp, next) {
+    console.error(error.stack);
+    resp.setHeader("Content-Type", "plain/text");
+    resp.status(500).send(error.message);
 });
 
 const server = http.createServer(app);

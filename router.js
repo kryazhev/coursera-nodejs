@@ -1,7 +1,6 @@
 const express = require("express");
-const dbutils = require("./data/dbutils");
 
-module.exports.create = (domain) => {
+module.exports.create = (domain, dao) => {
     const router = express.Router();
 
     router.route("/")
@@ -11,15 +10,18 @@ module.exports.create = (domain) => {
         next();
     })
     .get((req, resp, next) => {
-        dbutils.findAll(domain).then(result => {
+        dao.findAll(domain)
+        .then(result => {
             resp.json(result);
-        });
+        }, error => next(error))
+        .catch(error => next(error));
     })
     .post((req, resp, next) => {
-        const data = {name: req.body.name, description: req.body.description};
-        dbutils.insert(domain, data).then(result => {
+        dao.insert(domain, req.body)
+        .then(result => {
             resp.json(result);
-        });
+        }, error => next(error))
+        .catch(error => next(error));
     })
     .put((req, resp, next) => {
         resp.statusCode = 403;
@@ -27,16 +29,20 @@ module.exports.create = (domain) => {
         resp.end(`PUT operation not supported on /${domain}`);
     })
     .delete((req, resp, next) => {
-        dbutils.deleteAll(domain).then(result => {
+        dao.deleteAll(domain)
+        .then(result => {
             resp.json(result);
-        });
+        }, error => next(error))
+        .catch(error => next(error));
     });
     
     router.route("/:id")
     .get((req, resp, next) => {
-        dbutils.findOne(domain, req.params.id).then(result => {
+        dao.findOne(domain, req.params.id)
+        .then(result => {
             resp.json(result);
-        });
+        }, error => next(error))
+        .catch(error => next(error));
     })
     .post((req, resp, next) => {
         resp.statusCode = 403;
@@ -44,15 +50,18 @@ module.exports.create = (domain) => {
         resp.end(`POST operation not supported on /${domain}/${req.params.id}`);
     })
     .put((req, resp, next) => {
-        const data = {name: req.body.name, description: req.body.description};
-        dbutils.update(domain, req.params.id, data).then(result => {
+        dao.update(domain, req.params.id, req.body)
+        .then(result => {
             resp.json(result);
-        });    
+        }, error => next(error))
+        .catch(error => next(error));
     })
     .delete((req, resp, next) => {
-        dbutils.delete(domain, req.params.id).then(result => {
+        dao.delete(domain, req.params.id)
+        .then(result => {
             resp.json(result);
-        });
+        }, error => next(error))
+        .catch(error => next(error));
     });
 
     return router;
