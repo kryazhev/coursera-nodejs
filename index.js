@@ -3,6 +3,7 @@ const express = require("express");
 const morgan = require("morgan");
 
 const mongo = require("./data/mongo-utils")
+const model = require("./data/model")
 const mongooose = require("./data/mongooose-utils")
 const router = require("./router");
 
@@ -18,7 +19,9 @@ app.use("/v1/dishes", router.create("dishes", mongo));
 app.use("/v1/leaders", router.create("leaders", mongo));
 app.use("/v1/promotions", router.create("promotions", mongo));
 
-app.use("/v2/dishes", router.create("dishes", mongooose));
+app.use("/v2/dishes", router.create("dishes", mongooose.create(model.Dishes)));
+app.use("/v2/leaders", router.create("leaders", mongooose.create(model.Leaders)));
+app.use("/v2/promotions", router.create("promotions", mongooose.create(model.Promotions)));
 
 app.use(express.static(__dirname + "/public"));
 

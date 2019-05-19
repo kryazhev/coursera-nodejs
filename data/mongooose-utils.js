@@ -1,6 +1,5 @@
 const mongodb = require('mongodb');
 const mongoose = require('mongoose');
-const Dishes = require('../model/dishes');
 
 const url = "mongodb://localhost:27017/";
 mongoose.connect(url)
@@ -11,29 +10,30 @@ mongoose.connect(url)
     console.log(error)
 });
 
-mongoose.connect
-module.exports = {
-    findAll : (name) => {
-        return Dishes.find({});
-    },
-        
-    findOne : (name, id) => {
-        return Dishes.findById(id);
-    },
-
-    insert : (name, entity) => {
-        return Dishes.create(entity);
-    },
-
-    update : (name, id, entity) => {
-        return Dishes.findByIdAndUpdate(id, {$set: entity}, {new: true});
-    },
-        
-    delete : (name, id) => {
-        return Dishes.findByIdAndRemove(new mongodb.ObjectID(id));
-    },
-
-    deleteAll : (name) => {
-        return Dishes.remove({});
-    }
-}
+module.exports.create = (schema) => {
+    return {
+        findAll : (name) => {
+            return schema.find({});
+        },
+            
+        findOne : (name, id) => {
+            return schema.findById(id);
+        },
+    
+        insert : (name, entity) => {
+            return schema.create(entity);
+        },
+    
+        update : (name, id, entity) => {
+            return schema.findByIdAndUpdate(id, {$set: entity}, {new: true});
+        },
+            
+        delete : (name, id) => {
+            return schema.findByIdAndRemove(new mongodb.ObjectID(id));
+        },
+    
+        deleteAll : (name) => {
+            return schema.remove({});
+        }
+    };
+};
